@@ -1,0 +1,13 @@
+[Unit]
+Description=MJPG Streaming Server
+Before=octoprint.service
+After=network.target
+
+[Service]
+ExecStart="mjpg_streamer -i 'input_uvc.so -f 60 -r 1280x720' -o 'output_http.so -l 0.0.0.0 -p 8080 -w /srv/mjpg'"
+RuntimeDirectory=/srv/mjpg
+RuntimeDirectoryMode=0775
+Restart=always
+
+[Install]
+WantedBy=multi-user.target

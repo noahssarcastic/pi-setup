@@ -1,0 +1,10 @@
+[Unit]
+Description=OctoPrint Web Server
+After=network.target mjpg-streamer.service
+
+[Service]
+ExecStart=/opt/OctoPrint/venv/bin/octoprint
+Restart=always
+
+[Install]
+WantedBy=multi-user.target
