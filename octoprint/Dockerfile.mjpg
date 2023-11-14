@@ -1,0 +1,24 @@
+# syntax=docker/dockerfile:1
+FROM ubuntu:22.04 AS base
+RUN apt-get update && apt-get install -y \
+    libjpeg8-dev \
+    && rm -rf /var/lib/apt/lists/*
+
+FROM base AS build
+RUN apt-get update && apt-get install -y \
+    cmake \
+    g++ \
+    gcc \
+    git \
+    && rm -rf /var/lib/apt/lists/*
+WORKDIR /tmp
+RUN git clone https://github.com/jacksonliam/mjpg-streamer.git --depth 1
+WORKDIR /tmp/mjpg-streamer/mjpg-streamer-experimental
+RUN make && make install
+
+FROM base
+COPY --from=build /usr/local/bin/mjpg_streamer /usr/local/bin/mjpg_streamer
+COPY --from=build /usr/local/lib/mjpg-streamer /usr/local/lib/mjpg-streamer
+COPY --from=build /usr/local/share/mjpg-streamer /usr/local/share/mjpg-streamer
+EXPOSE 8080
+ENTRYPOINT [ "mjpg_streamer" ]

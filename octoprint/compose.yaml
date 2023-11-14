@@ -1,0 +1,22 @@
+services:
+  nginx:
+    build:
+      context: .
+      dockerfile: Dockerfile.nginx
+    ports:
+      - 443:443
+      - 80:8080
+    links:
+      - "octoprint:octoprint"
+      - "mjpg:mjpg"
+  octoprint:
+    build:
+      context: .
+      dockerfile: Dockerfile.octoprint
+  mjpg:
+    build:
+      context: .
+      dockerfile: Dockerfile.mjpg
+    command: -i 'input_uvc.so -n -d /dev/video0 -f 60 -r 1280x720' -o 'output_http.so -l 0.0.0.0 -w /srv/mjpg'
+    devices:
+      - /dev/video0
