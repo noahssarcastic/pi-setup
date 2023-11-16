@@ -5,7 +5,8 @@ services:
       dockerfile: Dockerfile.octoprint
     volumes:
       - ./.octoprint:/home/octoprint/.octoprint
-    privileged: true
+    devices:
+      - /dev/ttyACM0:/dev/ttyACM0
   mjpg:
     build:
       context: .
