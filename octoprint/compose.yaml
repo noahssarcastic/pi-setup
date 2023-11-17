@@ -7,6 +7,7 @@ services:
       - ./.octoprint:/root/.octoprint
     devices:
       - /dev/ttyACM0:/dev/ttyACM0
+    restart: always
   mjpg:
     build:
       context: .
@@ -14,6 +15,7 @@ services:
     command: -i 'input_uvc.so -n -d /dev/video0 -f 60 -r 1280x720' -o 'output_http.so -l 0.0.0.0 -w /srv/mjpg'
     devices:
       - /dev/video0
+    restart: always
   nginx:
     build:
       context: .
@@ -26,3 +28,4 @@ services:
       - "mjpg:mjpg"
     depends_on:
       - octoprint
+    restart: always
