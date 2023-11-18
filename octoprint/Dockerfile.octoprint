@@ -3,6 +3,7 @@ FROM python:3.10
 
 ENV PYTHONDONTWRITEBYTECODE=1
 RUN pip install --no-cache-dir OctoPrint
+RUN pip install --no-cache-dir "https://github.com/FormerLurker/Octolapse/archive/master.zip"
 
 RUN apt-get update && apt-get install -y \
     ffmpeg \
