@@ -1,31 +1,27 @@
 services:
   octoprint:
-    build:
-      context: .
-      dockerfile: Dockerfile.octoprint
+    image: octoprint/octoprint:latest
+    restart: unless-stopped
     volumes:
-      - ./.octoprint:/root/.octoprint
+      - octoprint:/octoprint
     devices:
       - /dev/ttyACM0:/dev/ttyACM0
-    restart: always
-  mjpg:
-    build:
-      context: .
-      dockerfile: Dockerfile.mjpg
-    command: -i 'input_uvc.so -n -d /dev/video0 -f 60 -r 1280x720' -o 'output_http.so -l 0.0.0.0 -w /srv/mjpg'
-    devices:
       - /dev/video0
-    restart: always
+    environment:
+      - ENABLE_MJPG_STREAMER=true
+      - CAMERA_DEV=/dev/video0
   nginx:
     build:
       context: .
       dockerfile: Dockerfile.nginx
+    restart: unless-stopped
     ports:
       - 443:443
       - 80:8080
     links:
-      - "octoprint:octoprint"
-      - "mjpg:mjpg"
+      - octoprint:octoprint
     depends_on:
       - octoprint
-    restart: always
+
+volumes:
+  octoprint:
